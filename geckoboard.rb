@@ -85,6 +85,7 @@ get '/btt/number' do
     item = Hash.new
     item["value"] = result["item"][i]
     item["text"] = ""
+    item["prefix"] = "$"
   
     items << item
   end
@@ -110,6 +111,7 @@ get '/ftt/number' do
     item = Hash.new
     item["value"] = result["item"][i]
     item["text"] = ""
+    item["prefix"] = "$"
   
     items << item
   end
