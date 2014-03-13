@@ -58,8 +58,8 @@ def appannie_iap appid
   result = Hash.new
   result["item"] = data
   settings = Hash.new
-  settings["axisx"] = [last_month_string, today_string]
-  settings["axisy"] = [min, max]
+  settings["axisx"] = [last_month.strftime("%d/%m"), today.strftime("%d/%m")]
+  settings["axisy"] = ["$#{min}", "$#{max}"]
   settings["colour"] = "ff9900"
   result["settings"] = settings
   JSON.pretty_generate(result)
