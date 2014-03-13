@@ -56,13 +56,14 @@ def appannie_iap appid
   end
   
   result = Hash.new
-  result["item"] = data
+  result["item"] = data.reverse
   settings = Hash.new
   settings["axisx"] = [last_month.strftime("%d/%m"), today.strftime("%d/%m")]
   settings["axisy"] = ["$#{min}", "$#{max}"]
   settings["colour"] = "ff9900"
   result["settings"] = settings
-  JSON.pretty_generate(result)
+  
+  result
 end
 
 get '/' do
@@ -70,9 +71,51 @@ get '/' do
 end
 
 get '/btt' do
-  appannie_iap 530942747
+  result = appannie_iap 530942747
+
+  JSON.pretty_generate(result)
+end
+
+get '/btt/number' do
+  result = appannie_iap 530942747
+  
+  items = []
+  
+  [-1, -2].each do |i|
+    item = Hash.new
+    item["value"] = result["item"][i]
+    item["text"] = ""
+  
+    items << item
+  end
+  
+  response = Hash.new
+  response["item"] = items
+
+  JSON.pretty_generate(response)
 end
 
 get '/ftt' do
-  appannie_iap 542975206
+  result = appannie_iap 542975206
+
+  JSON.pretty_generate(result)
+end
+
+get '/ftt/number' do
+  result = appannie_iap 542975206
+  
+  items = []
+  
+  [-1, -2].each do |i|
+    item = Hash.new
+    item["value"] = result["item"][i]
+    item["text"] = ""
+  
+    items << item
+  end
+  
+  response = Hash.new
+  response["item"] = items
+
+  JSON.pretty_generate(response)
 end
