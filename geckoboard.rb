@@ -15,8 +15,17 @@ end
 get '/btt' do
   content_type :json
   
+  today = DateTime.now
+  last_month = today - 30
+  
+  today_string = today.strftime("%Y-%m-%d")
+  last_month_string = last_month.strftime("%Y-%m-%d")
+  
+  url = "http://api.appannie.com/v1/accounts/23929/apps/530942747/sales?currency=SGD&start_date=#{last_month_string}&end_date=#{today_string}&break_down=date"
+  
+  puts url
   request = Typhoeus::Request.new(
-    "http://api.appannie.com/v1/accounts/23929/apps/530942747/sales?start_date=2014-01-01&end_date=2014-03-01&break_down=date",
+    url,
     method: :get,
     followlocation: true,
     headers: { 
@@ -32,20 +41,29 @@ get '/btt' do
   list = json["sales_list"]
   
   data = []
+  min = 999
+  max = -999
   list.each do |l|
-    data << l["revenue"]["iap"]["sales"]
+    iap = l["revenue"]["iap"]["sales"]
+    data << iap
+    
+    iap_float = iap.to_f
+    if iap_float > max
+      puts "#{max} - #{iap_float}"
+      max = iap_float
+    end
+    
+    if iap_float < min
+      puts "#{min} - #{iap_float}"
+      min = iap_float
+    end
   end
-  
-  puts response
-  puts json
-  puts "==="
-  JSON.pretty_generate(json)
   
   result = Hash.new
   result["item"] = data
   settings = Hash.new
-  settings["axisx"] = ["June", "May"]
-  settings["axisy"] = ["June", "MMay"]
+  settings["axisx"] = [last_month_string, today_string]
+  settings["axisy"] = [min, max]
   settings["colour"] = "ff9900"
   result["settings"] = settings
   JSON.pretty_generate(result)
