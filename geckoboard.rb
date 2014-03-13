@@ -8,11 +8,7 @@ require "net/http"
 require "uri"
 require 'typhoeus'
 
-get '/' do
-  erb :index
-end
-
-get '/btt' do
+def appannie_iap appid
   content_type :json
   
   today = DateTime.now
@@ -21,7 +17,7 @@ get '/btt' do
   today_string = today.strftime("%Y-%m-%d")
   last_month_string = last_month.strftime("%Y-%m-%d")
   
-  url = "http://api.appannie.com/v1/accounts/23929/apps/530942747/sales?currency=SGD&start_date=#{last_month_string}&end_date=#{today_string}&break_down=date"
+  url = "http://api.appannie.com/v1/accounts/23929/apps/#{appid}/sales?currency=SGD&start_date=#{last_month_string}&end_date=#{today_string}&break_down=date"
   
   puts url
   request = Typhoeus::Request.new(
@@ -67,4 +63,16 @@ get '/btt' do
   settings["colour"] = "ff9900"
   result["settings"] = settings
   JSON.pretty_generate(result)
+end
+
+get '/' do
+  erb :index
+end
+
+get '/btt' do
+  appannie_iap 530942747
+end
+
+get '/ftt' do
+  appannie_iap 542975206
 end
