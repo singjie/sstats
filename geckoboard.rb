@@ -43,5 +43,10 @@ get '/btt' do
   
   result = Hash.new
   result["item"] = data
+  settings = Hash.new
+  settings["axisx"] = ["June", "May"]
+  settings["axisy"] = ["June", "MMay"]
+  settings["colour"] = "ff9900"
+  result["settings"] = settings
   JSON.pretty_generate(result)
 end
